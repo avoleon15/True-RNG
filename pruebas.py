@@ -14,10 +14,6 @@ porque un hash puede hacer pasar las pruebas aunque la entrada sea mala.
 from math import erfc, sqrt
 
 import cv2
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
@@ -99,18 +95,9 @@ def main() -> None:
     recorte = gris[y0:y0 + LADO, x0:x0 + LADO]
     ruido = (recorte & (2**BITS_BAJOS - 1)) * (255 // (2**BITS_BAJOS - 1))
     final = numeros.reshape(LADO, LADO)
-    fig, ejes = plt.subplots(1, 3, figsize=(15, 5.4))
-    paneles = [
-        (recorte, "Foto (bits altos): se ve la escena"),
-        (ruido, f"Bits bajos de la foto ({BITS_BAJOS}): ruido crudo"),
-        (final, "160,000 números finales (400x400)"),
-    ]
-    for eje, (img, titulo) in zip(ejes, paneles):
-        eje.imshow(img, cmap="gray", vmin=0, vmax=255, interpolation="nearest")
-        eje.set_title(titulo, fontsize=11)
-        eje.axis("off")
-    fig.tight_layout()
-    fig.savefig(salida / "comparacion.png", dpi=110)
+    separador = np.full((LADO, 10), 255, dtype=np.uint8)
+    # De izquierda a derecha: foto (bits altos), ruido crudo, números finales.
+    cv2.imwrite(str(salida / "comparacion.png"), np.hstack([recorte, separador, ruido.astype(np.uint8), separador, final]))
     print("\nImágenes: salida/cuadricula_400x400.png, salida/comparacion.png")
     print("Reporte: salida/reporte.txt")
 
