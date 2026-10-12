@@ -11,7 +11,7 @@ import sounddevice as sd
 from PIL import Image
 from scipy import stats
 
-FS = 44100          # frecuencia de muestreo (Hz)
+FS = 48000          # frecuencia de muestreo (Hz), igual a la nativa del micrófono
 SEGUNDOS = 30       # duración de cada grabación
 CANTIDAD = 160_000  # números a generar (400 x 400)
 BLOQUE = 256        # muestras de audio por cada hash
